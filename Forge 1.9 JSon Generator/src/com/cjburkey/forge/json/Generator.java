@@ -22,7 +22,7 @@ public class Generator {
 	public static final ArrayList<Generator> generators = new ArrayList<Generator>();
 	
 	public static final void registerGenerators() {
-		generators.addAll(Search.loadGenerators());
+		generators.addAll(Search.loadGenerators()); 
 	}
 	
 }
