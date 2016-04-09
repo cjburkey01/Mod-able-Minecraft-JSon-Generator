@@ -9,10 +9,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -47,10 +47,13 @@ public class JSonGenerator extends Application {
 			n.setPadding(new Insets(10));
 			n.setSpacing(10);
 			
-			Tab t = new Tab();
+			NTab t = new NTab(g);
 			t.setText(g.name);
 			t.setContent(n);
 			t.setClosable(false);
+			t.setOnSelectionChanged(e -> {
+				if(t.isSelected()) System.out.println("Selected Generator: id" + g.getID());
+			});
 			tabbed.getTabs().add(t);
 			
 			g.extra();
@@ -63,7 +66,9 @@ public class JSonGenerator extends Application {
 		
 		gen.setOnAction(e -> {
 			for(Generator g : Generator.generators) {
-				if(g.name.equals(tabbed.getSelectionModel().getSelectedItem().getText())) {
+				int rid = g.getID();
+				int tabID = getIDFromTab(tabbed.getSelectionModel().getSelectedItem());
+				if(rid == tabID) {
 					FileChooser chooser = new FileChooser();
 					chooser.setTitle("Select Output File");
 					chooser.setInitialFileName(g.getFileName() + ".json");
@@ -89,6 +94,10 @@ public class JSonGenerator extends Application {
 		s.centerOnScreen();
 		
 		System.out.println("Program start finished.");
+	}
+	
+	private static final int getIDFromTab(Tab t) {
+		return ((NTab) t).getGenerator().getID();
 	}
 	
 	private static final void create(File f, String s) {
